@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import CustomButtom from './CustomButtom'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -17,13 +17,29 @@ const HomeHeader = () => {
     const user = useSelector((state) => state.user.value)
     const cart = useSelector((state) => state.cart.items)
     // console.log("This is User", user.username);
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    const handleScroll = () => {
+        if (window.scrollY > 50) {  // Trigger after 50px scroll
+            setIsScrolled(true);
+        } else {
+            setIsScrolled(false);
+        }
+    };
+    useEffect(() => {
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
 
     const handleSignOut = () => {
         signOutUser(auth)
     }
 
     return (
-        <div className='w-full flex justify-center fixed z-50 bg-[#ffffff] shadow-2xl' >
+        <div className={`w-full flex justify-center fixed z-50 bg-[#ffffff] transition-all duration-300 ease-in-out ${isScrolled ? 'shadow-2xl' : ''}`} >
             <div className='h-24 bg-[#ffffff]  w-[1024px] max-lg:w-screen px-2 flex items-center'>
                 <div className='flex justify-between items-center w-full'>
                     <div className=''>
